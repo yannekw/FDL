@@ -1,4 +1,6 @@
 """Definition of Dataloader"""
+import math
+import random
 
 import numpy as np
 
@@ -45,39 +47,44 @@ class DataLoader:
         ########################################################################
 
         # TODO: Get the number of samples in the dataset
+        sample_number = len(self.dataset)
 
         # TODO: Create an array of indices to sample from the dataset
-
+        indices = [i for i in range(0, sample_number)]
         # TODO: Shuffle the indices if self.shuffle is True
 
+        if self.shuffle:
+            random.shuffle(indices)
+
         # TODO: Calculate the number of full batches
+        batches = len(self)
 
         # TODO: If self.drop_last is False and there are leftover samples,
         #       add one more batch to account for the last smaller batch
 
         # TODO: Iterate over the number of batches
+        for i in range(0, batches):
 
             # TODO: Calcuate the start and end index of the batch
-
+            start = i * self.batch_size
+            end = start + self.batch_size
             # TODO: Get the indices for the current batch
-
+            indices_for_batch = iter(indices[start:end])
             # TODO: Create a list to store the samples of the current batch
-
+            samples = []
             # TODO: Iterate over the indices of the current batch
-
+            for j in indices_for_batch:
+                samples.append(self.dataset[j]["data"])
             # TODO: Convert the list to numpy arrays
-
+            samples = np.array(samples)
             # TODO: Yield the batch
-    
-
-        pass
+            yield {"data": samples}
 
         ########################################################################
         #                           END OF YOUR CODE                           #
         ########################################################################
 
     def __len__(self):
-        length = None
         ########################################################################
         # TODO:                                                                #
         # Return the length of the dataloader                                  #
@@ -86,9 +93,13 @@ class DataLoader:
         ########################################################################
         
 
-        pass
+        if self.drop_last:
+            length = len(self.dataset) // self.batch_size
+        else:
+            length = math.ceil((len(self.dataset) / self.batch_size))
 
-        ########################################################################
+
+            ########################################################################
         #                           END OF YOUR CODE                           #
         ########################################################################
         return length

@@ -74,18 +74,7 @@ class ImageFolderDataset(Dataset):
         return images, labels
 
     def __len__(self):
-        length = None
-        ########################################################################
-        # TODO:                                                                #
-        # Return the length of the dataset (number of images)                  #
-        ########################################################################
-
-        pass
-
-        ########################################################################
-        #                           END OF YOUR CODE                           #
-        ########################################################################
-        return length
+        return len(self.images)
 
     @staticmethod
     def load_image_as_numpy(image_path):
@@ -93,7 +82,11 @@ class ImageFolderDataset(Dataset):
         return np.asarray(Image.open(image_path), dtype=float)
 
     def __getitem__(self, index):
-        data_dict = None
+        image = self.load_image_as_numpy(self.images[index])
+        if self.transform is not None:
+            image = self.transform(image)
+        data_dict = {"image": image, "label": self.labels[index]}
+
         ########################################################################
         # TODO:                                                                #
         # Create a dict of the data at the given index in your dataset         #
@@ -121,8 +114,6 @@ class ImageFolderDataset(Dataset):
         #  self.labels and self.images. DO NOT call self.make_dataset() again! #    
         ########################################################################
    
-
-        pass
 
         ########################################################################
         #                           END OF YOUR CODE                           #

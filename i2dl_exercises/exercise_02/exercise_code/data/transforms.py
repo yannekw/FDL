@@ -20,9 +20,12 @@ class RescaleTransform:
         self._data_min = in_range[0]
         self._data_max = in_range[1]
 
-    def __call__(self, image):
+    def __call__(self, image: np.ndarray):
         assert type(image) == np.ndarray, "The input image needs to be a numpy array! Make sure you dont send the string path."
-        ret_image = None
+        ret_image = (((image - self._data_min) * (self.max - self.min)) / (self._data_max - self._data_min)) + self.min
+
+
+        # new_image = new_image.resize((self.min, self.max))
         ########################################################################
         # TODO:                                                                #
         # Rescale the given images:                                            #
@@ -37,7 +40,6 @@ class RescaleTransform:
         ########################################################################
         
 
-        pass
 
         ########################################################################
         #                           END OF YOUR CODE                           #
@@ -56,8 +58,9 @@ def compute_image_mean_and_std(images):
     # TODO:                                                                #
     # Calculate the mean and std                                           #
     ########################################################################
+    mean = np.mean(images, axis=(0, 1, 2))
+    std = np.std(images, axis=(0, 1, 2))
 
-    mean, std = None
 
     ########################################################################
     #                           END OF YOUR CODE                           #
